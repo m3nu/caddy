@@ -349,6 +349,9 @@ func (h *Handler) Cleanup() error {
 
 	// remove hosts from our config from the pool
 	for _, upstream := range h.Upstreams {
+		if transport, ok := h.Transport.(*http.Transport); ok {
+			transport.CloseIdleConnections()
+		}
 		_, _ = hosts.Delete(upstream.String())
 	}
 
